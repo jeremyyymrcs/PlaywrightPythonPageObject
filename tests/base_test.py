@@ -20,7 +20,6 @@ class BaseTest:
         Fixture to set up the page for each test and handle login functionality.
         This fixture runs before and after each test.
         """
-        print("\n\n=== Starting New Test Case ===")
         try:
             self._initialize_pages(page)
             self._perform_login(request)
@@ -41,6 +40,7 @@ class BaseTest:
         """Initialize the necessary page objects for the test."""
         try:
             self.base_page = BasePage(page)
+            print("\n\n=== Starting New Test Case ===")
             logger.info("Setting up the browser and opening the website.")
             self.base_page.setup()
 
