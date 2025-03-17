@@ -31,6 +31,9 @@ jobs:
           python -m pip install --upgrade pip wheel setuptools
           pip install -r requirements.txt
 
+      - name: Ensure browsers are installed
+        run: python -m playwright install --with-deps
+
 
       - name: Playwright Login Testing
         run: |
