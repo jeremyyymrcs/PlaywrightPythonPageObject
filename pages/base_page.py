@@ -16,7 +16,6 @@ class BasePage:
     def open_page(self):
         """Navigate to the login page and perform validation checks."""
         logger.info("Navigating to the login page.")
-        print("\n\n=== Starting New Test Case ===")
         self.page.goto(ReadConfig.get_simple_login_url())
         try:
             expect(self.page).to_have_title(re.compile("Login / Simple App"))
