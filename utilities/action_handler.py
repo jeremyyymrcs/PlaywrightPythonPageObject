@@ -28,12 +28,16 @@ class ActionHandler:
             raise ValueError(f"Unsupported locator type: {locator_type}")
 
     def click(self, locator_type: str):
-        """Clicks a button by its text."""
-        self.page.locator(locator_type).click()
+        """Clicks a button by its locator."""
+        button = self.page.locator(locator_type)
+        expect(button).to_be_visible()
+        button.click()
 
-    def click_by_text(self, button_text: str):
+    def click_by_text(self, button_text: str, timeout: int = 7000):
         """Clicks a button by its text."""
-        self.page.get_by_text(button_text).click()
+        button = self.page.get_by_text(button_text)
+        expect(button).to_be_visible(timeout=timeout)
+        button.click()
 
     def is_text_visible(self, text: str):
         """Checks if the text is visible on the page."""
@@ -43,10 +47,12 @@ class ActionHandler:
         """Hovers over an element using hover_locator and then clicks another element."""
         try:
             hover_element = self.page.locator(hover_locator)
+            expect(hover_element).to_be_visible()
             hover_element.hover()
             logger.debug(f"Hovered over the element with locator: '{hover_locator}'")
 
             click_element = self.page.locator(click_locator)
+            expect(click_element).to_be_visible()
             click_element.click()
             logger.debug(f"Clicked on the element with locator: '{click_locator}'")
 
@@ -57,6 +63,7 @@ class ActionHandler:
     def set_value(self, locator: str, value: str):
         """Sets a value on a slider by percentage."""
         slider = self.page.locator(locator)
+        expect(slider).to_be_visible()
 
         if not slider.is_visible():
             raise Exception(f"Slider with locator '{locator}' is not visible.")
