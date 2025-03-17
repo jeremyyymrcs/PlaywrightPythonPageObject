@@ -1,0 +1,10 @@
+{
+  "url": {
+    "mfa_login_link": "https://seleniumbase.io/simple/login"
+  },
+  "credentials": {
+    "user_name": "demo_user",
+    "pass_word": "secret_pass",
+    "wrong_password": "wrong_password"
+  }
+}

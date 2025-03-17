@@ -1,0 +1,8 @@
+[32m2025-03-17 06:25:30 PM - INFO - Performing successful login.[0m
+[32m2025-03-17 06:25:30 PM - INFO - Starting to login[0m
+[32m2025-03-17 06:25:33 PM - INFO - Navigating to the demo page.[0m
+[32m2025-03-17 06:25:34 PM - INFO - New page URL: https://seleniumbase.io/demo_page[0m
+[32m2025-03-17 06:25:34 PM - INFO - Starting demo site interaction.[0m
+[32m2025-03-17 06:25:46 PM - INFO - Demo site interaction completed successfully.[0m
+[32m2025-03-17 06:25:47 PM - INFO - Logging out of the dashboard.[0m
+[32m2025-03-17 06:25:48 PM - INFO - Successfully logged out and redirected to the Simple Login Testing Page.[0m
