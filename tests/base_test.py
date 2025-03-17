@@ -7,7 +7,6 @@ logger = get_custom_logger(__name__)
 
 
 class BaseTest:
-    print("\n\n=== Starting New Test Case ===")
     """Base test class to handle common setup and login for test cases."""
 
     # Explicitly declare instance attributes to avoid the warning
