@@ -5,6 +5,7 @@ from utilities.custom_logging import get_custom_logger
 
 logger = get_custom_logger(__name__)
 
+
 class BaseTest:
     """Base test class to handle common setup and login for test cases."""
 
@@ -16,6 +17,7 @@ class BaseTest:
 
     @pytest.fixture(autouse=True)
     def setup(self, page, request):
+        print("\n\n=== Starting New Test Case ===")
         """
         Fixture to set up the page for each test and handle login functionality.
         This fixture runs before and after each test.
@@ -40,7 +42,6 @@ class BaseTest:
         """Initialize the necessary page objects for the test."""
         try:
             self.base_page = BasePage(page)
-            print("\n\n=== Starting New Test Case ===")
             logger.info("Setting up the browser and opening the website.")
             self.base_page.open_page()
 
