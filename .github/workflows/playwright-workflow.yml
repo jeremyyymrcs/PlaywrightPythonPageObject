@@ -26,7 +26,6 @@
 
       - name: Playwright Login Testing
         run: |
-          #!/bin/bash
           cd tests
           pytest test_login.py
           
