@@ -1,0 +1,32 @@
+name: Trigger SeleniumBase Workflow
+
+on:
+  push:
+    branches:
+      - main  # Trigger on pushes to the main branch
+
+jobs:
+  trigger:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repo B
+        uses: actions/checkout@v4
+
+      - name: Get Commit Info in Repo B
+        id: commit_info
+        run: |
+          commit_id=$(git log -1 --format='%H')
+          commit_message=$(git log -1 --format='%s')
+          echo "commit_id=$commit_id" >> $GITHUB_ENV
+          echo "commit_message=$commit_message" >> $GITHUB_ENV
+
+      - name: Trigger workflow in Repo A
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          repository: jeremyyymrcs/Login-API-Automation  # SeleniumBase Repo
+          token: ${{ secrets.AUTOMATION_SECRET_TOKEN }}  # PlayWright Repo Access Tiken
+          event-type: trigger-workflow  # Event type to trigger the workflow in SeleniumBase
+          client-payload: '{"ref": "refs/heads/main", "commit_id": "${{ env.commit_id }}", "commit_message": "${{ env.commit_message }}"}'  # Passing commit details
+
+
