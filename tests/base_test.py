@@ -42,7 +42,7 @@ class BaseTest:
             self.base_page = BasePage(page)
             print("\n\n=== Starting New Test Case ===")
             logger.info("Setting up the browser and opening the website.")
-            self.base_page.setup()
+            self.base_page.open_page()
 
             # Initialize page objects
             self.login_page = self.base_page.get_login_page()

@@ -1,21 +1,16 @@
 import re
-import logging
 from playwright.sync_api import Page, expect
 from utilities.read_config import ReadConfig
 from utilities.action_handler import ActionHandler
+from utilities.custom_logging import get_custom_logger
 
-logger = logging.getLogger(__name__)
+logger = get_custom_logger(__name__)
 
 
 class BasePage:
     def __init__(self, page: Page):
         self.page = page
         self.action_handler = ActionHandler(self.page)
-
-    def setup(self):
-        """Set up the pages, initializing all required pages."""
-        logger.info("Setting up BasePage components.")
-        self.open_page()
 
     def open_page(self):
         """Navigate to the login page and perform validation checks."""
