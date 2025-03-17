@@ -21,11 +21,12 @@ class BaseTest:
         This fixture runs before and after each test.
         """
         try:
+            logger.info("====== STARTING NEW TEST CASE ======")
             self._initialize_pages(page)
             self._perform_login(request)
 
             yield
-            logger.info("=== Test Case Completed ===\n")
+            logger.info("====== TEST CASE COMPLETED ======\n")
         except Exception as e:
             logger.error(f"Error during setup: {e}")
             logger.error("Traceback: " + traceback.format_exc())
