@@ -25,7 +25,7 @@ class BaseTest:
             self._perform_login(request)
 
             yield
-            print("=== Test Case Completed ===\n")
+            logger.info("=== Test Case Completed ===\n")
         except Exception as e:
             logger.error(f"Error during setup: {e}")
             logger.error("Traceback: " + traceback.format_exc())
