@@ -41,7 +41,6 @@ class BaseTest:
         """Initialize the necessary page objects for the test."""
         try:
             self.base_page = BasePage(page)
-            logger.info("Setting up the browser and opening the website.")
             self.base_page.open_page()
 
             # Initialize page objects
