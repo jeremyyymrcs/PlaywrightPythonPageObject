@@ -17,10 +17,10 @@ class BaseTest:
 
     @pytest.fixture(autouse=True)
     def setup(self, page, request):
-        """
-        Fixture to set up the page for each test and handle login functionality.
+        """Fixture to set up the page for each test and handle login functionality.
         This fixture runs before and after each test.
         """
+        print("\n\n=== Starting New Test Case ===")
         try:
             self._initialize_pages(page)
             self._perform_login(request)
@@ -30,12 +30,7 @@ class BaseTest:
             raise e  # Reraise exception to ensure test fails
 
         yield
-
-        try:
-            self._teardown()
-        except Exception as e:
-            logger.error(f"Error during teardown: {e}")
-            logger.error("Traceback: " + traceback.format_exc())
+        print("\n=== Test Case Completed ===\n")
 
     def _initialize_pages(self, page):
         """Initialize the necessary page objects for the test."""
@@ -67,13 +62,3 @@ class BaseTest:
             logger.error(f"Error during login: {e}")
             logger.error("Traceback: " + traceback.format_exc())
             raise e  # Reraise exception to fail the test
-
-    @staticmethod
-    def _teardown():
-        """Clean up after each test (if needed)."""
-        try:
-            print("=== Test Case Completed ===\n")
-        except Exception as e:
-            logger.error(f"Error during teardown: {e}")
-            logger.error("Traceback: " + traceback.format_exc())
-            raise e  # Reraise exception if something fails during teardown

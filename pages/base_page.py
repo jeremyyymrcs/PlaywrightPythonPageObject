@@ -15,7 +15,6 @@ class BasePage:
 
     def open_page(self):
         """Navigate to the login page and perform validation checks."""
-        print("\n\n=== Starting New Test Case ===")
         logger.info("Navigating to the login page.")
         self.page.goto(ReadConfig.get_simple_login_url())
         try:
