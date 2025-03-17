@@ -20,7 +20,6 @@ class BaseTest:
         """Fixture to set up the page for each test and handle login functionality.
         This fixture runs before and after each test.
         """
-        print("\n\n=== Starting New Test Case ===")
         try:
             self._initialize_pages(page)
             self._perform_login(request)
