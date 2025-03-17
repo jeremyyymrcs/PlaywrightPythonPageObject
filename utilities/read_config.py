@@ -43,5 +43,3 @@ class ReadConfig:
     @staticmethod
     def get_secret_key():
         return ReadConfig._get_config_value("credentials", "secret_key")
-
-    #commentg
