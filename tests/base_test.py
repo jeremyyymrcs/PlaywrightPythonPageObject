@@ -23,13 +23,13 @@ class BaseTest:
         try:
             self._initialize_pages(page)
             self._perform_login(request)
+
+            yield
+            print("=== Test Case Completed ===\n")
         except Exception as e:
             logger.error(f"Error during setup: {e}")
             logger.error("Traceback: " + traceback.format_exc())
             raise e  # Reraise exception to ensure test fails
-
-        yield
-        print("\n=== Test Case Completed ===\n")
 
     def _initialize_pages(self, page):
         """Initialize the necessary page objects for the test."""
