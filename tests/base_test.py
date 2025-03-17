@@ -7,6 +7,7 @@ logger = get_custom_logger(__name__)
 
 
 class BaseTest:
+    print("\n\n=== Starting New Test Case ===")
     """Base test class to handle common setup and login for test cases."""
 
     # Explicitly declare instance attributes to avoid the warning
@@ -17,7 +18,6 @@ class BaseTest:
 
     @pytest.fixture(autouse=True)
     def setup(self, page, request):
-        print("\n\n=== Starting New Test Case ===")
         """
         Fixture to set up the page for each test and handle login functionality.
         This fixture runs before and after each test.
