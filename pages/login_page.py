@@ -9,8 +9,8 @@ logger = get_custom_logger(__name__)
 class LoginPage(ActionHandler):
 
     def _enter_credentials(self, username, password):
-        self.type("id", LoginPageLocators.USERNAME, username)
-        self.type("id", LoginPageLocators.PASSWORD, password)
+        self.type(LoginPageLocators.USERNAME, username)
+        self.type(LoginPageLocators.PASSWORD, password)
         self.click(LoginPageLocators.SIGN_IN_BUTTON)
 
     def successful_login(self):

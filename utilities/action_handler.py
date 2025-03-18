@@ -11,21 +11,11 @@ class ActionHandler:
         self.default_window = page  # Store the default (original) page
         self.current_window = page  # Track the current window explicitly
 
-    def type(self, locator_type: str, selector_value: str, value: str):
+    def type(self, selector_value: str, value: str):
         """Fills an input field based on the locator type and its corresponding value."""
-        locators = {
-            "placeholder": lambda: self.page.get_by_placeholder(selector_value).fill(value),
-            "text": lambda: self.page.locator(f"text={selector_value}").fill(value),
-            "role": lambda: self.page.locator(f'[role="{selector_value}"]').fill(value),
-            "css": lambda: self.page.locator(selector_value).fill(value),
-            "id": lambda: self.page.locator(f"#{selector_value}").fill(value),
-            "name": lambda: self.page.locator(f"[name='{selector_value}']").fill(value),
-        }
-
-        if locator_type in locators:
-            locators[locator_type]()
-        else:
-            raise ValueError(f"Unsupported locator type: {locator_type}")
+        text_box = self.page.locator(selector_value)
+        expect(text_box).to_be_visible(timeout=7000)
+        text_box.fill(value)
 
     def click(self, locator_type: str):
         """Clicks a button by its locator."""
@@ -61,12 +51,10 @@ class ActionHandler:
             raise
 
     def set_value(self, locator: str, value: str):
-        """Sets a value on a slider by percentage."""
+        """Sets a value on a slider by percentage using drag_to()."""
         slider = self.page.locator(locator)
         expect(slider).to_be_visible()
 
-        if not slider.is_visible():
-            raise Exception(f"Slider with locator '{locator}' is not visible.")
         if not slider.is_enabled():
             raise Exception(f"Slider with locator '{locator}' is not enabled.")
 
@@ -74,6 +62,7 @@ class ActionHandler:
         if not bounding_box:
             raise Exception(f"Could not get bounding box for the slider at '{locator}'")
 
+        # Convert value to an integer
         try:
             percentage_value = int(value)
         except ValueError:
@@ -82,12 +71,16 @@ class ActionHandler:
         if not (0 <= percentage_value <= 100):
             raise ValueError(f"Percentage value must be between 0 and 100: {value}")
 
-        target_position = bounding_box['x'] + (bounding_box['width'] * (percentage_value / 100))
+        # Calculate the target X position based on percentage
+        start_x = bounding_box["x"]
+        end_x = start_x + bounding_box["width"]
+        target_x = start_x + (bounding_box["width"] * (percentage_value / 100))
 
-        self.page.mouse.move(bounding_box['x'] + bounding_box['width'] / 2, bounding_box['y'] + bounding_box['height'] / 2)
-        self.page.mouse.down()
-        self.page.mouse.move(target_position, bounding_box['y'] + bounding_box['height'] / 2)
-        self.page.mouse.up()
+        # Find an offset element for dragging
+        target_offset_x = target_x - start_x
+
+        # Drag the slider by the calculated offset
+        slider.drag_to(slider, source_position={"x": 0, "y": 0}, target_position={"x": target_offset_x, "y": 0})
 
         logger.debug(f"Slider set to {value}%")
 
