@@ -73,7 +73,6 @@ class ActionHandler:
 
         # Calculate the target X position based on percentage
         start_x = bounding_box["x"]
-        end_x = start_x + bounding_box["width"]
         target_x = start_x + (bounding_box["width"] * (percentage_value / 100))
 
         # Find an offset element for dragging
