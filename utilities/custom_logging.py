@@ -72,3 +72,14 @@ def handle_exceptions(func):
             raise  # Re-raise exception to ensure the test fails
 
     return wrapper
+
+
+def handle_exceptions_class(cls):
+    """
+    This decorator applies the `handle_exceptions_for_method` to all callable methods of the class.
+    """
+    for attr_name, attr_value in cls.__dict__.items():
+        if callable(attr_value):
+            # Apply the exception handler to each method
+            setattr(cls, attr_name, handle_exceptions(attr_value))
+    return cls
