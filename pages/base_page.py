@@ -2,9 +2,10 @@ import re
 from playwright.sync_api import Page, expect
 from utilities.read_config import Config
 from utilities.action_handler import ActionHandler
-from utilities.custom_logging import get_custom_logger
+from utilities.custom_logging import get_custom_logger, handle_exceptions
 
 logger = get_custom_logger(__name__)
+
 
 
 class BasePage:
@@ -13,16 +14,13 @@ class BasePage:
         self.page = page
         self.action_handler = ActionHandler(self.page)
 
+    @handle_exceptions
     def open_page(self):
         """Navigate to the login page and perform validation checks."""
         logger.info("Navigating to the login page.")
         self.page.goto(Config.LOGIN_URL)
-        try:
-            expect(self.page).to_have_title(re.compile("Login / Simple App"))
-            logger.info("Successfully reached the login page.")
-        except Exception as e:
-            logger.error(f"Failed to load login page: {str(e)}")
-            raise
+        expect(self.page).to_have_title(re.compile("Login / Simple App"))
+        logger.info("Successfully reached the login page.")
 
     def get_login_page(self):
         from pages.login_page import LoginPage

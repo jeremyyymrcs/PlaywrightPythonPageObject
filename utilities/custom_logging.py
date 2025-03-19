@@ -58,3 +58,17 @@ def get_custom_logger(name, log_level=logging.INFO):
     logger.addHandler(console_handler)
 
     return logger
+
+
+logger = get_custom_logger(__name__)
+
+
+def handle_exceptions(func):
+    def wrapper(*args, **kwargs):
+        try:
+            return func(*args, **kwargs)
+        except Exception as e:
+            logger.error(f"An error occurred in {func.__name__}: {e}")
+            raise  # Re-raise exception to ensure the test fails
+
+    return wrapper
