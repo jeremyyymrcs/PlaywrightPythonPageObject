@@ -1,6 +1,6 @@
 from utilities.action_handler import ActionHandler
 from utilities.custom_logging import get_custom_logger
-from utilities.read_config import ReadConfig
+from utilities.read_config import Config
 from locators.pages_locators import LoginPageLocators, HomePageLocators
 
 logger = get_custom_logger(__name__)
@@ -16,7 +16,7 @@ class LoginPage(ActionHandler):
     def successful_login(self):
         try:
             logger.info("Starting to login")
-            self._enter_credentials(ReadConfig.get_user_name(), ReadConfig.get_password())
+            self._enter_credentials(Config.USERNAME, Config.PASSWORD)
             self.is_text_visible(HomePageLocators.WELCOME_TEXT)
         except Exception as e:
             logger.error(f"An error occurred during login: {e}")
@@ -26,7 +26,7 @@ class LoginPage(ActionHandler):
 
         try:
             logger.info("Starting login with incorrect password.")
-            self._enter_credentials("demo_user", "wrong_password")
+            self._enter_credentials(Config.USERNAME, Config.WRONG_PASSWORD)
             self.is_text_visible("Invalid Password")
             logger.info("Invalid password warning found, as expected.")
         except Exception as e:

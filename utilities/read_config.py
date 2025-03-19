@@ -1,45 +1,19 @@
 import json
 import os
 
-# Initialize the configuration reader
-config_file_path = os.path.join("..//config.json")
 
-# Check if the configuration file exists
-if not os.path.exists(config_file_path):
-    raise FileNotFoundError(f"Configuration file not found: {config_file_path}")
+class Config:
+    """Handles test configurations."""
 
-# Read the JSON configuration file
-with open(config_file_path, "r") as file:
-    config = json.load(file)
+    CONFIG_PATH = os.path.join(os.path.dirname(__file__), "..", "config.json")
 
+    try:
+        with open(CONFIG_PATH, "r") as f:
+            config_data = json.load(f)
+    except (FileNotFoundError, json.JSONDecodeError) as e:
+        raise RuntimeError(f"Error loading config file: {e}")
 
-class ReadConfig:
-
-    @staticmethod
-    def _get_config_value(section, key, default=None):
-        """Helper method to fetch config values with error handling."""
-        try:
-            return config[section][key]
-        except KeyError as e:
-            print(f"Error: {e}")
-            return default
-
-    @staticmethod
-    def get_simple_login_url():
-        return ReadConfig._get_config_value("url", "mfa_login_link")
-
-    @staticmethod
-    def get_user_name():
-        return ReadConfig._get_config_value("credentials", "user_name")
-
-    @staticmethod
-    def get_password():
-        return ReadConfig._get_config_value("credentials", "pass_word")
-
-    @staticmethod
-    def get_wrong_password():
-        return ReadConfig._get_config_value("credentials", "wrong_password")
-
-    @staticmethod
-    def get_secret_key():
-        return ReadConfig._get_config_value("credentials", "secret_key")
+    LOGIN_URL = config_data.get("url", {}).get("mfa_login_link", "")
+    USERNAME = config_data.get("credentials", {}).get("user_name", "")
+    PASSWORD = config_data.get("credentials", {}).get("pass_word", "")
+    WRONG_PASSWORD = config_data.get("credentials", {}).get("wrong_password", "")

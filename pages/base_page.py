@@ -1,6 +1,6 @@
 import re
 from playwright.sync_api import Page, expect
-from utilities.read_config import ReadConfig
+from utilities.read_config import Config
 from utilities.action_handler import ActionHandler
 from utilities.custom_logging import get_custom_logger
 
@@ -16,7 +16,7 @@ class BasePage:
     def open_page(self):
         """Navigate to the login page and perform validation checks."""
         logger.info("Navigating to the login page.")
-        self.page.goto(ReadConfig.get_simple_login_url())
+        self.page.goto(Config.LOGIN_URL)
         try:
             expect(self.page).to_have_title(re.compile("Login / Simple App"))
             logger.info("Successfully reached the login page.")
