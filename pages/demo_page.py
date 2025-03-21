@@ -1,12 +1,13 @@
 from utilities.action_handler import ActionHandler
-from utilities.custom_logging import get_custom_logger, handle_exceptions
+from utilities.custom_logging import get_custom_logger, handle_exceptions_class
 from locators.pages_locators import DemoPageLocators
 
 logger = get_custom_logger(__name__)
 
 
+@handle_exceptions_class
 class DemoPage(ActionHandler):
-    @handle_exceptions
+
     def demo_site_practice(self):
         logger.info("Starting demo site interaction.")
         # Type text into various text fields and then assert

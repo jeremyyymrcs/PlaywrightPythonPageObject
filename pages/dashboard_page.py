@@ -1,32 +1,24 @@
 from pages.demo_page import DemoPage
 from utilities.action_handler import ActionHandler
-from utilities.custom_logging import get_custom_logger, handle_exceptions
+from utilities.custom_logging import get_custom_logger, handle_exceptions, handle_exceptions_class
 
 logger = get_custom_logger(__name__)
 
 
-
+@handle_exceptions_class
 class DashboardPage(ActionHandler):
-    @handle_exceptions
+
     def navigate_to_demo_page(self):
         """Navigates to the demo page and returns the DemoPage instance for further interaction."""
 
         logger.info("Navigating to the demo page.")
+        return self.click_and_open_new_page("Demo Page", DemoPage)
 
-        # Click on "Demo Page" to open the new tab
-        with self.page.context.expect_page() as new_page_info:
-            self.click_by_text("Demo Page")
+    def verify_welcome_message(self):
+        logger.info("Verifying Welcome Message.")
+        self.is_text_visible("Welcome!")
+        logger.info("Welcome Message visible on the dashboard.")
 
-        # Capture the new page that was opened
-        new_page = new_page_info.value
-
-        # Optional: Check the URL of the new page to confirm it's correct
-        logger.info(f"New page URL: {new_page.url}")
-
-        # Return the DemoPage instance, passing the new page to it for further interaction
-        return DemoPage(new_page)
-
-    @handle_exceptions
     def assert_all_the_tabs_in_dashboard(self):
         logger.info("Asserting all the tabs in the dashboard.")
 
@@ -42,7 +34,6 @@ class DashboardPage(ActionHandler):
 
         logger.info("All tabs are visible on the dashboard.")
 
-    @handle_exceptions
     def log_out(self):
         logger.info("Logging out of the dashboard.")
 
