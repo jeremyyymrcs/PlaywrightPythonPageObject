@@ -3,9 +3,11 @@ from playwright.sync_api import Page, expect
 from utilities.read_config import Config
 from utilities.action_handler import ActionHandler
 from utilities.custom_logging import get_custom_logger, handle_exceptions
+from pages.login_page import LoginPage
+from pages.dashboard_page import DashboardPage
+from pages.demo_page import DemoPage
 
 logger = get_custom_logger(__name__)
-
 
 
 class BasePage:
@@ -23,13 +25,10 @@ class BasePage:
         logger.info("Successfully reached the login page.")
 
     def get_login_page(self):
-        from pages.login_page import LoginPage
         return LoginPage(self.page)
 
     def get_dashboard_page(self):
-        from pages.dashboard_page import DashboardPage
         return DashboardPage(self.page)
 
     def get_demo_page(self):
-        from pages.demo_page import DemoPage
         return DemoPage(self.page)
