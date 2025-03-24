@@ -5,7 +5,7 @@ import os
 
 def clear_custom_log_file():
     # Dynamically determine the log directory relative to the current working directory
-    log_dir = os.path.join(os.getcwd(), '..//reports')
+    log_dir = os.path.join('..', 'reports')
     log_file = 'my_custom.log'
 
     # Ensure that the directory exists
@@ -21,7 +21,7 @@ def clear_custom_log_file():
 
 def get_custom_logger(name, log_level=logging.INFO):
     # Dynamically determine the log directory relative to the current working directory
-    log_dir = os.path.join(os.getcwd(), '..//reports')
+    log_dir = os.path.join('..', 'reports')
     log_file = 'my_custom.log'
 
     # Construct the full file path
@@ -30,12 +30,17 @@ def get_custom_logger(name, log_level=logging.INFO):
     # Clear the log file before configuring the logger
     clear_custom_log_file()
 
-    # Create a logger
-    logger = logging.getLogger(name)
-    logger.setLevel(log_level)
+    # Create a custom logger to avoid shadowing the outer logger
+    custom_logger = logging.getLogger(name)
 
-    # Create a formatter
-    formatter = colorlog.ColoredFormatter(
+    # Check if the logger already has handlers and clear them to avoid duplicate handlers
+    if custom_logger.hasHandlers():
+        custom_logger.handlers.clear()
+
+    custom_logger.setLevel(log_level)
+
+    # Create a formatter for console with colors
+    console_formatter = colorlog.ColoredFormatter(
         '%(log_color)s%(asctime)s - %(levelname)s - %(message)s%(reset)s',
         datefmt='%Y-%m-%d %I:%M:%S %p',
         log_colors={
@@ -47,17 +52,23 @@ def get_custom_logger(name, log_level=logging.INFO):
         }
     )
 
+    # Create a formatter for the file without colors
+    file_formatter = logging.Formatter(
+        '%(asctime)s - %(levelname)s - %(message)s',
+        datefmt='%Y-%m-%d %I:%M:%S %p'
+    )
+
     # Create a file handler and use the dynamically constructed log file path
     file_handler = logging.FileHandler(log_file_path)
-    file_handler.setFormatter(formatter)
-    logger.addHandler(file_handler)
+    file_handler.setFormatter(file_formatter)
+    custom_logger.addHandler(file_handler)
 
-    # Create a console handler
+    # Create a console handler with color formatting
     console_handler = logging.StreamHandler()
-    console_handler.setFormatter(formatter)
-    logger.addHandler(console_handler)
+    console_handler.setFormatter(console_formatter)
+    custom_logger.addHandler(console_handler)
 
-    return logger
+    return custom_logger
 
 
 logger = get_custom_logger(__name__)

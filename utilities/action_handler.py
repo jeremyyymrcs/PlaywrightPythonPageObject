@@ -1,5 +1,6 @@
-import os
+import os, shutil
 import time
+from pathlib import Path
 
 import allure
 from playwright.sync_api import Page, expect
@@ -17,7 +18,9 @@ class ActionHandler:
         self.page = page
         self.default_window = page  # Store the default (original) page
         self.current_window = page  # Track the current window explicitly
-        self.screenshots_dir = "../reports/screenshots"
+        # self.screenshots_dir = "../reports/screenshots"
+        self.screenshots_dir = os.path.join('..', 'reports', 'screenshots')
+        self.allure_dir = os.path.join('..', 'reports', 'allure-results')
         self.action_count = 0  # This will keep track of the screenshot order
         self.folder_cleared = False
         self.clear_screenshot_folder()
@@ -26,17 +29,39 @@ class ActionHandler:
         """Clears all files in the screenshot folder only once when initializing."""
         # Ensure the folder is cleared only once using the class-level flag
         if not ActionHandler.folder_cleared:
+            # Ensure the parent directory exists
+            parent_dir = os.path.dirname(self.screenshots_dir)
+            if not os.path.exists(parent_dir):
+                os.makedirs(parent_dir)  # Create the parent directory if it doesn't exist
+
+            # Ensure the screenshots directory exists
             if not os.path.exists(self.screenshots_dir):
                 os.makedirs(self.screenshots_dir)  # Create the folder if it doesn't exist
 
-            for filename in os.listdir(self.screenshots_dir):
-                file_path = os.path.join(self.screenshots_dir, filename)
-                if os.path.isfile(file_path):
-                    os.remove(file_path)
-                    logger.debug(f"Deleted existing screenshot: {file_path}")
+            try:
+                for path in Path(self.allure_dir).glob("**/*"):
+                    if path.is_file():
+                        path.unlink()
+                    elif path.is_dir():
+                        shutil.rmtree(path)
+            except PermissionError:
+                pass
+            except FileNotFoundError:
+                pass
+
+            for screenshot_file_name in os.listdir(self.screenshots_dir):
+                file_path = os.path.join(self.screenshots_dir, screenshot_file_name)
+                if screenshot_file_name.endswith(".png"):
+                    # if os.path.isfile(file_path):
+                    try:
+                        os.remove(file_path)
+                        logger.debug(f"Deleted existing screenshot: {file_path}")
+                    except PermissionError:
+                        pass
+                    except FileNotFoundError:
+                        pass
 
             ActionHandler.folder_cleared = True  # Set the flag to True after clearing once
-
 
     def take_screenshot(self, action_name: str):
         """Takes a full-page screenshot after an action in a specific order."""
@@ -44,32 +69,39 @@ class ActionHandler:
         ActionHandler.action_count += 1  # Increment class-level action_count
 
         # Add action_count to the filename to maintain order
-        timestamp = time.strftime("%Y%m%d_%H%M%S")  # Adding timestamp to filenames
-        screenshot_path = f"{self.screenshots_dir}/screenshot_{ActionHandler.action_count}_{action_name}_{timestamp}.png"
-        self.page.screenshot(full_page=True, path=screenshot_path)
-        logger.debug(
-            f"Screenshot {ActionHandler.action_count} taken for action '{action_name}' and saved to '{screenshot_path}'")
+        timestamp = time.strftime("%Y%m%d_%H%M%S")
+        screenshot_path = os.path.join(self.screenshots_dir,
+                                       f"screenshot_{ActionHandler.action_count}_{action_name}_{timestamp}.png")
+
+        try:
+            self.page.screenshot(full_page=True, path=screenshot_path)
+            logger.debug(
+                f"Screenshot {ActionHandler.action_count} taken for action '{action_name}' and saved to '{screenshot_path}'")
+
+        except Exception as e:
+            logger.error(f"Failed to take screenshot for action '{action_name}': {e}")
+            raise  # Re-raise the exception to make sure the error is handled properly
 
         # Attach the screenshot to Allure report
         with open(screenshot_path, "rb") as f:
-            allure.attach(f.read(), name=f"screenshot_{ActionHandler.action_count}",
+            allure.attach(f.read(), name=f"screenshot_{ActionHandler.action_count}_{action_name}_{timestamp}.png",
                           attachment_type=allure.attachment_type.PNG)
-
+            f"screenshot_{ActionHandler.action_count}_{action_name}_{timestamp}.png"
 
     def type(self, selector_value: str, value: str):
         """Fills an input field based on the locator type and its corresponding value."""
         # Increment action count before the action to ensure the correct order
-        self.take_screenshot('type')
         text_box = self.page.locator(selector_value)
         expect(text_box).to_be_visible(timeout=7000)
         text_box.fill(value)
+        self.take_screenshot('type')
 
     def click(self, locator_type: str):
         """Clicks a button by its locator."""
         # Increment action count before the action to ensure the correct order
-        self.take_screenshot('click')
         button = self.page.locator(locator_type)
         expect(button).to_be_visible()
+        self.take_screenshot('click')
         button.click()
 
     def click_and_open_new_page(self, action_text: str, page_class):
@@ -91,9 +123,9 @@ class ActionHandler:
     def click_by_text(self, button_text: str, timeout: int = 7000):
         """Clicks a button by its text."""
         # Increment action count before the action to ensure the correct order
-        self.take_screenshot('click_by_text')
         button = self.page.get_by_text(button_text)
         expect(button).to_be_visible(timeout=timeout)
+        self.take_screenshot('click_by_text')
         button.click()
 
     def is_text_visible(self, text: str):

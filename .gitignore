@@ -1,0 +1,25 @@
+# Compiled Python Bytecode
+*.py[cod]
+
+# Packages
+*.egg
+*.egg-info
+.eggs
+eggs
+develop-eggs
+bin
+build
+dist
+lib
+lib64
+parts
+sdist
+var
+.installed.cfg
+__pycache__
+
+
+reports/allure-results
+reports/allure-report
+reports/screenshots
+.env
