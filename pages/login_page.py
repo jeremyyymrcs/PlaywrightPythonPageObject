@@ -12,11 +12,9 @@ logger = get_custom_logger(__name__)
 class LoginPage(ActionHandler):
 
     def _enter_credentials(self, username, password):
-        with allure.step('Entering User Name'):
-            self.type(LoginPageLocators.USERNAME, username)
-        with allure.step('Entering Password'):
-            self.type(LoginPageLocators.PASSWORD, password)
-            self.click(LoginPageLocators.SIGN_IN_BUTTON)
+        self.type(LoginPageLocators.USERNAME, username)
+        self.type(LoginPageLocators.PASSWORD, password)
+        self.click(LoginPageLocators.SIGN_IN_BUTTON)
 
     @allure.step("Enter valid credentials and verify successful login")
     def successful_login(self):

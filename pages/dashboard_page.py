@@ -1,3 +1,5 @@
+import allure
+
 from pages.demo_page import DemoPage
 from utilities.action_handler import ActionHandler
 from utilities.custom_logging import get_custom_logger, handle_exceptions, handle_exceptions_class
@@ -14,6 +16,7 @@ class DashboardPage(ActionHandler):
         logger.info("Navigating to the demo page.")
         return self.click_and_open_new_page("Demo Page", DemoPage)
 
+    @allure.step("Verify Welcome Message in Dashboard")
     def verify_welcome_message(self):
         logger.info("Verifying Welcome Message.")
         self.is_text_visible("Welcome!")
