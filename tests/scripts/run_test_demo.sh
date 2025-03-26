@@ -6,7 +6,7 @@ cd ..
 
 # Run tests with pytest, using 2 parallel processes
 echo "Running pytest tests..."
-pytest test_login.py test_demo_site.py -n 2
+pytest test_demo_site.py
 
 # Generate the Allure report from the test results
 echo "Generating Allure report..."

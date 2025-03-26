@@ -40,21 +40,26 @@ RUN playwright install --with-deps
 # Install additional browser (if needed)
 RUN playwright install chromium
 
+## Install Java (required for Allure)
+#RUN apt-get update && apt-get install -y openjdk-11-jdk
+#
+## Set JAVA_HOME environment variable
+#ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+#ENV PATH=$JAVA_HOME/bin:$PATH
+
 # Install Java (required for Allure)
-RUN apt-get update && apt-get install -y openjdk-11-jdk
+RUN apt-get update && apt-get install -y \
+    openjdk-11-jre-headless \
+    wget && \
+    wget https://repo.maven.apache.org/maven2/io/qameta/allure/allure-commandline/2.33.0/allure-commandline-2.33.0.tgz && \
+    tar -zxvf allure-commandline-2.33.0.tgz && \
+    mv allure-2.33.0 /opt/allure && \
+    ln -s /opt/allure/bin/allure /usr/local/bin/allure
 
-# Set JAVA_HOME environment variable
-ENV JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
-ENV PATH=$JAVA_HOME/bin:$PATH
 
-# Install Allure command-line tool
-RUN wget https://github.com/allure-framework/allure-core/releases/download/allure-core-1.4.24.RC2/allure-commandline.zip && \
-    unzip allure-commandline.zip -d /usr/local/allure && \
-    rm allure-commandline.zip
-
-# Ensure Allure binary is in the PATH
-ENV PATH="/usr/local/allure/bin:$PATH"
 
 RUN chmod +x /app/tests/scripts/run_test_suite.sh
+
+WORKDIR /app/tests/scripts
 
 CMD ["/bin/bash"]
