@@ -31,7 +31,7 @@ pipeline {
 
                     // Run the test script inside the container
                     echo "Running Playwright tests inside the container"
-                    bat "docker exec ${CONTAINER_NAME} ./run_test_demo.sh"
+                    bat "docker exec ${CONTAINER_NAME} ./run_test_suite.sh"
                 }
             }
         }
