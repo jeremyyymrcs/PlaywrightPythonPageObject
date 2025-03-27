@@ -2,7 +2,7 @@ pipeline {
     agent {
         docker {
             image 'playwright-sample-project'  // Docker image
-            args '-v /var/run/docker.sock:/var/run/docker.sock -v //c/ProgramData/Jenkins/.jenkins/workspace:/app'
+            args '-u root:root'
         }
     }
     stages {
