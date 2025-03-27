@@ -1,17 +1,17 @@
 pipeline {
-    agent none  // Don't use the default docker agent for the entire pipeline
+    agent none
     stages {
         stage('Start Container') {
             agent {
                 docker {
-                    image 'playwright-sample-project'  // Your custom image
-                    args '-u root:root -v /c/ProgramData/Jenkins/.jenkins/workspace/DockerTest:/app -w /app'  // Map workspace and set working directory
+                    image 'playwright-sample-project'
+                    args '-u root:root'
                 }
             }
             steps {
                 script {
                     echo 'Starting the container...'
-                    sh 'docker run -d --name friendly_wilson playwright-sample-project -u root:root -v /c/ProgramData/Jenkins/.jenkins/workspace/DockerTest:/app -w /app'
+                    sh 'docker run -d --name friendly_wilson playwright-sample-project'
                 }
             }
         }
@@ -20,26 +20,16 @@ pipeline {
             steps {
                 script {
                     echo 'Running tests inside the container...'
-                    // Run the test script inside the running container
                     sh 'docker exec friendly_wilson /app/tests/scripts/run_test_suite.sh'
                 }
             }
         }
 
-        stage('Archive Allure Results') {
+        stage('Archive Results') {
             steps {
                 script {
-                    echo 'Archiving Allure Results...'
-                    archiveArtifacts artifacts: 'reports/allure-report/**/*', allowEmptyArchive: true
-                }
-            }
-        }
-
-        stage('Publish Allure Report') {
-            steps {
-                script {
-                    echo 'Publishing Allure Report in Jenkins...'
-                    allure includeProperties: false, jdk: '', results: 'reports/allure-results'
+                    echo 'Archiving results...'
+                    archiveArtifacts artifacts: 'reports/**/*', allowEmptyArchive: true
                 }
             }
         }
