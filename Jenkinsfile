@@ -1,20 +1,64 @@
 pipeline {
-    agent none  // Don't use the default docker agent for the entire pipeline
+    agent any
+
+    environment {
+        // Path to your custom Docker image (if your Dockerfile is in a different directory, specify it)
+        DOCKER_IMAGE = 'playwright-sample-project'
+    }
+
     stages {
-        stage('Start Container') {
-            agent {
-                docker {
-                    image 'playwright-sample-project'  // Your custom image
-                    args '-u root:root -v /c/ProgramData/Jenkins/.jenkins/workspace/DockerTest:/app -w /app'  // Map workspace and set working directory
-                }
-            }
+        stage('Checkout') {
             steps {
-                script {
-                    echo 'Starting the container...'
-                    sh 'docker run -d --name friendly_wilson playwright-sample-project -u root:root -v /c/ProgramData/Jenkins/.jenkins/workspace/DockerTest:/app -w /app'
-                }
+                // Checkout the code from your repository
+                checkout scm
             }
         }
+
+//         stage('Build Docker Image') {
+//             steps {
+//                 script {
+//                     // Build the custom Docker image from the Dockerfile in the current directory (or specify path to Dockerfile)
+//                     docker.build(DOCKER_IMAGE, '.')
+//                 }
+//             }
+//         }
+
+
+
+
+
+
+
+
+
+
+// pipeline {
+//     agent none  // Don't use the default docker agent for the entire pipeline
+//     stages {
+//         stage('Start Container') {
+//             agent {
+//                 docker {
+//                     image 'playwright-sample-project'  // Your custom image
+//                     args '-u root:root -v /c/ProgramData/Jenkins/.jenkins/workspace/DockerTest:/app -w /app'  // Map workspace and set working directory
+//                 }
+//             }
+//
+//     stages {
+//         stage('Checkout') {
+//             steps {
+//                 docker {
+//                     // Checkout the code from your repository
+//                     checkout scm
+//                 }
+//             }
+//
+//             steps {
+//                 script {
+//                     echo 'Starting the container...'
+//                     sh 'docker run -d --name friendly_wilson playwright-sample-project -u root:root -v /c/ProgramData/Jenkins/.jenkins/workspace/DockerTest:/app -w /app'
+//                 }
+//             }
+//         }
 
 //         stage('Run Tests') {
 //             steps {
