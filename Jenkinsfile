@@ -36,11 +36,20 @@ pipeline {
             }
         }
     }
-
     post {
+        success {
+            // Archive the Allure report
+            echo "Archiving Allure report"
+            archiveArtifacts allowEmptyArchive: true, artifacts: 'allure-report/**', fingerprint: true
+
+            // Clean up the generated Allure report from the workspace
+            echo "Cleaning up Allure report from the workspace"
+            bat "rm -rf allure-report/"
+        }
+
         always {
-            // Clean workspace or perform any necessary post-build actions
-            cleanWs()
+            // Clean workspace after the build, excluding the allure-report directory
+            cleanWs notFailBuild: true, deleteDirs: true, excludes: '**/allure-report/**'
         }
     }
 }
