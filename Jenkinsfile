@@ -5,15 +5,13 @@ pipeline {
             agent {
                 docker {
                     image 'playwright-sample-project'  // Your custom image
-                    // Use Linux-style path for Docker on Windows
-                    args '-v /var/run/docker.sock:/var/run/docker.sock -v /c/ProgramData/Jenkins/.jenkins/workspace:/app'
+                    args '-v /var/run/docker.sock:/var/run/docker.sock -v //c/ProgramData/Jenkins/.jenkins/workspace:/app'
                 }
             }
             steps {
                 script {
                     echo 'Starting the container and running tests...'
-                    // Docker inside step to start container and run tests in one go
-                    sh 'docker start -i friendly_wilson'
+                    bat 'docker run -d --name friendly_wilson playwright-sample-project'
                 }
             }
         }
@@ -22,8 +20,7 @@ pipeline {
             steps {
                 script {
                     echo 'Running tests inside the container...'
-                    // Run the test script inside the running container
-                    sh 'docker exec friendly_wilson /app/tests/scripts/run_test_suite.sh'
+                    bat 'docker exec friendly_wilson /app/tests/scripts/run_test_suite.sh'
                 }
             }
         }
@@ -50,7 +47,7 @@ pipeline {
             steps {
                 script {
                     echo 'Cleaning up the container...'
-                    sh 'docker stop friendly_wilson && docker rm friendly_wilson'
+                    bat 'docker stop friendly_wilson && docker rm friendly_wilson'
                 }
             }
         }
