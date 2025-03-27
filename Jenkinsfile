@@ -13,7 +13,7 @@ pipeline {
                 script {
                     echo 'Starting the container and running tests...'
                     // Docker inside step to start container and run tests in one go
-                    sh 'docker run -d --name friendly_wilson playwright-sample-project'
+                    sh 'docker start -i friendly_wilson'
                 }
             }
         }
