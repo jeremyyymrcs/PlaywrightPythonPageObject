@@ -36,6 +36,8 @@ pipeline {
             }
         }
     }
+
+
     post {
         success {
             // Archive the Allure report
@@ -44,7 +46,7 @@ pipeline {
 
             // Clean up the generated Allure report from the workspace
             echo "Cleaning up Allure report from the workspace"
-            bat "rm -rf allure-report/"
+            sh "rm -rf allure-report/"
         }
 
         always {
