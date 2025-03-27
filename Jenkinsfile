@@ -1,17 +1,26 @@
 pipeline {
-    agent none  // Don't use the default docker agent for the entire pipeline
+    agent {
+        docker {
+            image 'playwright-sample-project'  // Docker image
+            args '-v /var/run/docker.sock:/var/run/docker.sock -v //c/ProgramData/Jenkins/.jenkins/workspace:/app'
+        }
+    }
     stages {
         stage('Start Container') {
-            agent {
-                docker {
-                    image 'playwright-sample-project'  // Your custom image
-                    args '-v /var/run/docker.sock:/var/run/docker.sock -v //c/ProgramData/Jenkins/.jenkins/workspace:/app'
-                }
-            }
             steps {
                 script {
-                    echo 'Starting the container and running tests...'
-                    bat 'docker run -d --name friendly_wilson playwright-sample-project'
+                    echo 'Starting the container...'
+
+                    // Start the container if not running
+                    def containerRunning = sh(script: 'docker ps -q -f name=friendly_wilson', returnStdout: true).trim()
+
+                    if (!containerRunning) {
+                        echo 'Container not running. Starting the container...'
+                        // Start the container in detached mode (non-interactive)
+                        sh 'docker run -d --name friendly_wilson playwright-sample-project'
+                    } else {
+                        echo 'Container is already running.'
+                    }
                 }
             }
         }
@@ -20,7 +29,9 @@ pipeline {
             steps {
                 script {
                     echo 'Running tests inside the container...'
-                    bat 'docker exec friendly_wilson /app/tests/scripts/run_test_suite.sh'
+
+                    // Run the test script inside the running container
+                    sh 'docker exec friendly_wilson /bin/bash -c "/app/tests/scripts/run_test_suite.sh"'
                 }
             }
         }
@@ -47,7 +58,7 @@ pipeline {
             steps {
                 script {
                     echo 'Cleaning up the container...'
-                    bat 'docker stop friendly_wilson && docker rm friendly_wilson'
+                    sh 'docker stop friendly_wilson && docker rm friendly_wilson'
                 }
             }
         }
