@@ -19,7 +19,7 @@ pipeline {
             steps {
                 script {
                     // Start your pre-existing Docker container if not already running
-                    def containerRunning = sh(script: "docker ps -q -f name=${CONTAINER_NAME}", returnStdout: true).trim()
+                    def containerRunning = bat(script: "docker ps -q -f name=${CONTAINER_NAME}", returnStdout: true).trim()
 
                     if (!containerRunning) {
                         // If the container is not running, start it
