@@ -24,14 +24,14 @@ pipeline {
                     if (!containerRunning) {
                         // If the container is not running, start it
                         echo "Starting container ${CONTAINER_NAME}"
-                        sh "docker start -i ${CONTAINER_NAME}"
+                        bat "docker start -i ${CONTAINER_NAME}"
                     } else {
                         echo "Container ${CONTAINER_NAME} is already running"
                     }
 
                     // Run the test script inside the container
                     echo "Running Playwright tests inside the container"
-                    sh "docker exec ${CONTAINER_NAME} ./run_test_demo.sh"
+                    bat "docker exec ${CONTAINER_NAME} ./run_test_demo.sh"
                 }
             }
         }
