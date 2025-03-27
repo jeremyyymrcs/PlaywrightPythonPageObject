@@ -36,27 +36,6 @@ pipeline {
             }
         }
     }
-        stage('Publish Allure Report') {
-            steps {
-                // Publish Allure report to Jenkins
-                allure([
-                    includeProperties: false,
-                    jdk: '',
-                    reportBuildPolicy: 'ALWAYS',
-                    results: [[path: 'allure-report']]
-                ])
-            }
-        }
-
-        stage('Archive Allure Report') {
-            steps {
-                script {
-                    // Archive Allure report as a build artifact so it can be viewed later
-                    archiveArtifacts artifacts: 'allure-report/**/*', allowEmptyArchive: true
-                }
-            }
-        }
-    }
 
     post {
         always {
