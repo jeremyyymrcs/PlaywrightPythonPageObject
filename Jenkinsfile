@@ -5,14 +5,15 @@ pipeline {
             agent {
                 docker {
                     image 'playwright-sample-project'  // Your custom image
-                    args '-v /var/run/docker.sock:/var/run/docker.sock -v $WORKSPACE:/app' // Mount Jenkins workspace into the container
+                    // Use Windows path explicitly for Docker on Windows
+                    args '-v /var/run/docker.sock:/var/run/docker.sock -v C:/ProgramData/Jenkins/.jenkins/workspace:/app'
                 }
             }
             steps {
                 script {
                     echo 'Starting the container...'
                     // Start the container in detached mode with /bin/bash already set as CMD in the Dockerfile
-                    sh 'docker run -d --name friendly_wilson playwright-sample-project'
+                    bat 'docker run -d --name friendly_wilson playwright-sample-project'
                 }
             }
         }
@@ -22,7 +23,7 @@ pipeline {
                 script {
                     echo 'Running tests inside the container...'
                     // Run the test script inside the running container without needing to specify /bin/bash
-                    sh 'docker exec friendly_wilson /app/tests/scripts/run_test_suite.sh'
+                    bat 'docker exec friendly_wilson /app/tests/scripts/run_test_suite.sh'
                 }
             }
         }
@@ -49,7 +50,7 @@ pipeline {
             steps {
                 script {
                     echo 'Cleaning up the container...'
-                    sh 'docker stop friendly_wilson && docker rm friendly_wilson'
+                    bat 'docker stop friendly_wilson && docker rm friendly_wilson'
                 }
             }
         }
