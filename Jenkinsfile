@@ -5,14 +5,13 @@ pipeline {
             agent {
                 docker {
                     image 'playwright-sample-project'  // Your custom image
-                    args '-u root:root'  // Run container as root user
+                    args '-u root:root -v /c/ProgramData/Jenkins/.jenkins/workspace/DockerTest:/app -w /app'  // Map workspace and set working directory
                 }
             }
             steps {
                 script {
                     echo 'Starting the container...'
-                    // This will run your docker container with root user inside
-                    sh 'docker run -d --name friendly_wilson playwright-sample-project -u root:root'
+                    sh 'docker run -d --name friendly_wilson playwright-sample-project -u root:root -v /c/ProgramData/Jenkins/.jenkins/workspace/DockerTest:/app -w /app'
                 }
             }
         }
