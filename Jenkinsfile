@@ -1,26 +1,18 @@
 pipeline {
-    agent {
-        docker {
-            image 'playwright-sample-project'  // Docker image
-            args '-u root:root'
-        }
-    }
+    agent none  // Don't use the default docker agent for the entire pipeline
     stages {
         stage('Start Container') {
+            agent {
+                docker {
+                    image 'playwright-sample-project'  // Your custom image
+                    args '-u root:root'  // Run container as root user
+                }
+            }
             steps {
                 script {
                     echo 'Starting the container...'
-
-                    // Start the container if not running
-                    def containerRunning = sh(script: 'docker ps -q -f name=friendly_wilson', returnStdout: true).trim()
-
-                    if (!containerRunning) {
-                        echo 'Container not running. Starting the container...'
-                        // Start the container in detached mode (non-interactive)
-                        sh 'docker run -d --name friendly_wilson playwright-sample-project'
-                    } else {
-                        echo 'Container is already running.'
-                    }
+                    // This will run your docker container with root user inside
+                    sh 'docker run -d --name friendly_wilson playwright-sample-project -u root:root'
                 }
             }
         }
@@ -29,9 +21,8 @@ pipeline {
             steps {
                 script {
                     echo 'Running tests inside the container...'
-
                     // Run the test script inside the running container
-                    sh 'docker exec friendly_wilson /bin/bash -c "/app/tests/scripts/run_test_suite.sh"'
+                    sh 'docker exec friendly_wilson /app/tests/scripts/run_test_suite.sh'
                 }
             }
         }
