@@ -36,6 +36,24 @@ pipeline {
             }
         }
     }
+        stage('Archive Allure Report') {
+            steps {
+                script {
+                    // Archive Allure report as a build artifact so it can be viewed later
+                    archiveArtifacts artifacts: 'allure-report/**/*', allowEmptyArchive: true
+                }
+            }
+        }
+
+        stage('Publish Allure Report') {
+            steps {
+                script {
+                    // Publish the Allure report using the Allure Jenkins plugin
+                    allure includeProperties: false, jdk: '', results: [[path: 'allure-results']]
+                }
+            }
+        }
+    }
 
     post {
         always {
