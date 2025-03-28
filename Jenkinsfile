@@ -35,9 +35,7 @@ pipeline {
                     echo "Running Playwright tests inside the container"
                     bat "docker exec ${CONTAINER_NAME} ./run_test_suite.sh"
 
-                    // Generate Allure report from the results
-                    echo "Generating Allure report"
-                    bat "docker exec ${CONTAINER_NAME} allure generate ${ALLURE_RESULTS_DIR} --clean -o ${ALLURE_REPORT_DIR}"
+
                 }
             }
         }
