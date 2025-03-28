@@ -44,7 +44,7 @@ pipeline {
             steps {
                 script {
                     // Publish the Allure report if it's generated
-                    if (fileExists("${ALLURE_REPORT_DIR}) {
+                    if (fileExists("${ALLURE_REPORT_DIR})) {
                         allure includeProperties: false, jdk: '', results: [[path: "${ALLURE_REPORT_DIR}"]]
                     } else {
                         echo "Allure report not found!"
