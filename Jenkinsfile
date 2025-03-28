@@ -27,7 +27,8 @@ pipeline {
                         if (!containerRunning) {
                             // If the container is not running, start it
                             echo "Starting container ${CONTAINER_NAME}"
-                            bat "docker start -i ${CONTAINER_NAME}"
+                            // You can use docker start if it exists or docker run to create a new container if needed
+                            bat "docker start ${CONTAINER_NAME} || docker run -d --name ${CONTAINER_NAME} ${DOCKER_IMAGE}"
                         } else {
                             echo "Container ${CONTAINER_NAME} is already running"
                         }
