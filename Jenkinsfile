@@ -6,7 +6,7 @@ pipeline {
         DOCKER_IMAGE = 'playwright-sample-project'  // Replace with your Docker image name
         CONTAINER_NAME = 'friendly_wilson'         // Name of your pre-existing container
         ALLURE_RESULTS_DIR = 'allure-results'      // Directory where Allure stores the results
-        ALLURE_REPORT_DIR = 'allure-report'        // Directory to store the generated Allure report
+        ALLURE_REPORT_DIR = 'app/reports/allure-report'        // Directory to store the generated Allure report
     }
 
     stages {
@@ -34,7 +34,6 @@ pipeline {
                     // Run the test script inside the container and generate the Allure report
                     echo "Running Playwright tests inside the container"
                     bat "docker exec ${CONTAINER_NAME} ./run_test_suite.sh"
-
 
                 }
             }
