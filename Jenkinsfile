@@ -63,6 +63,9 @@ pipeline {
     }
 }
 
-
+    options {
+        ansiColor('xterm')  // Specify the color theme for your logs (e.g., 'xterm' or 'gnu')
+    }
+}
 
 
