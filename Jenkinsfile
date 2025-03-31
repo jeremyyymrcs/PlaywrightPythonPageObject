@@ -1,12 +1,6 @@
 pipeline {
     agent any
 
-    triggers {
-    // Trigger the pipeline when a push is made to the 'main' branch
-    gitHubPush()
-    }
-
-
     environment {
         // Define the Docker container image you're using
         DOCKER_IMAGE = 'playwright-sample-project'  // Replace with your Docker image name
