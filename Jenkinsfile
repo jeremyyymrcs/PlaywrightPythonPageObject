@@ -44,14 +44,9 @@ pipeline {
         stage('Publish Allure Report') {
             steps {
                 script {
-                    // Ensure Allure results are found
-                    echo "Checking if Allure report exists in ${WORKSPACE}/${ALLURE_REPORT_DIR}"
-                    if (fileExists("${ALLURE_REPORT_DIR}/**/*")) {
-                        echo "Allure report found!"
-                        allure includeProperties: false, jdk: '', results: [[path: "${WORKSPACE}/${ALLURE_REPORT_DIR}"]]
-                    } else {
-                        echo "Allure report not found!"
-                    }
+                    echo "Copying Allure report from container to Jenkins workspace"
+                    // Copy the Allure report directory from the container to the workspace
+                    bat "docker cp ${CONTAINER_NAME}:${ALLURE_REPORT_DIR} ${WORKSPACE}/allure-report"
                 }
             }
         }
